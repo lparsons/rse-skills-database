@@ -33,7 +33,13 @@ function setupSkillsTracker() {
 }
 
 function createInstructionsSheet(ss) {
-  const sheet = ss.insertSheet('Instructions', 0);
+  // Check if Instructions sheet already exists
+  let sheet = ss.getSheetByName('Instructions');
+  if (sheet) {
+    // If it exists, delete it first so we can recreate with latest version
+    ss.deleteSheet(sheet);
+  }
+  sheet = ss.insertSheet('Instructions', 0);
   
   // Title
   sheet.getRange('A1').setValue('Skills Tracker - Usage Instructions')
@@ -171,7 +177,12 @@ function createInstructionsSheet(ss) {
 }
 
 function createPeopleSheet(ss) {
-  const sheet = ss.insertSheet('People', 0);
+  // Check if People sheet already exists
+  let sheet = ss.getSheetByName('People');
+  if (sheet) {
+    ss.deleteSheet(sheet);
+  }
+  sheet = ss.insertSheet('People', 0);
   
   // Headers
   const headers = [['Person ID', 'Name', 'Email']];
@@ -199,7 +210,12 @@ function createPeopleSheet(ss) {
 }
 
 function createSkillsSheet(ss) {
-  const sheet = ss.insertSheet('Skills', 1);
+  // Check if Skills sheet already exists
+  let sheet = ss.getSheetByName('Skills');
+  if (sheet) {
+    ss.deleteSheet(sheet);
+  }
+  sheet = ss.insertSheet('Skills', 1);
   
   // Headers
   const headers = [['Skill ID', 'Skill Name', 'Category']];
@@ -232,7 +248,12 @@ function createSkillsSheet(ss) {
 }
 
 function createPersonSkillsSheet(ss) {
-  const sheet = ss.insertSheet('Person_Skills', 2);
+  // Check if Person_Skills sheet already exists
+  let sheet = ss.getSheetByName('Person_Skills');
+  if (sheet) {
+    ss.deleteSheet(sheet);
+  }
+  sheet = ss.insertSheet('Person_Skills', 2);
   
   // Headers
   const headers = [['Person Name', 'Skill', 'Level', 'Notes']];
@@ -333,7 +354,12 @@ function addLevelFormatting(sheet) {
 }
 
 function createSummarySheet(ss) {
-  const sheet = ss.insertSheet('Summary', 3);
+  // Check if Summary sheet already exists
+  let sheet = ss.getSheetByName('Summary');
+  if (sheet) {
+    ss.deleteSheet(sheet);
+  }
+  sheet = ss.insertSheet('Summary', 3);
   
   // Title
   sheet.getRange('A1').setValue('Skills Summary')
