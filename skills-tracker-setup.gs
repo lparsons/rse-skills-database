@@ -13,6 +13,7 @@ function setupSkillsTracker() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   
   // Create all sheets first
+  createInstructionsSheet(ss);
   createPeopleSheet(ss);
   createSkillsSheet(ss);
   createPersonSkillsSheet(ss);
@@ -22,13 +23,151 @@ function setupSkillsTracker() {
   const sheets = ss.getSheets();
   for (let i = sheets.length - 1; i >= 0; i--) {
     const sheetName = sheets[i].getName();
-    if (sheetName !== 'People' && sheetName !== 'Skills' && 
+    if (sheetName !== 'Instructions' && sheetName !== 'People' && sheetName !== 'Skills' && 
         sheetName !== 'Person_Skills' && sheetName !== 'Summary') {
       ss.deleteSheet(sheets[i]);
     }
   }
   
   SpreadsheetApp.getUi().alert('Skills Tracker setup complete!');
+}
+
+function createInstructionsSheet(ss) {
+  const sheet = ss.insertSheet('Instructions', 0);
+  
+  // Title
+  sheet.getRange('A1').setValue('Skills Tracker - Usage Instructions')
+    .setFontSize(20)
+    .setFontWeight('bold')
+    .setBackground('#674ea7')
+    .setFontColor('#ffffff');
+  sheet.getRange('A1:D1').merge();
+  
+  // Overview section
+  sheet.getRange('A3').setValue('📋 Overview')
+    .setFontSize(16)
+    .setFontWeight('bold')
+    .setFontColor('#674ea7');
+  
+  sheet.getRange('A4').setValue(
+    'This spreadsheet helps track team member skills and proficiency levels. '
+    + 'It consists of 4 main sheets that work together to maintain accurate skill records.'
+  ).setWrap(true);
+  
+  // Sheet descriptions
+  sheet.getRange('A6').setValue('📊 Sheet Descriptions')
+    .setFontSize(16)
+    .setFontWeight('bold')
+    .setFontColor('#674ea7');
+  
+  const sheetDescriptions = [
+    ['Sheet', 'Purpose', 'How to Use'],
+    [
+      'People',
+      'Master list of team members',
+      'Add new team members here. Each person gets a unique ID, name, and email.'
+    ],
+    [
+      'Skills',
+      'Master list of skills',
+      'Add new skills here. Use consistent naming to avoid duplicates (e.g., "Python" not "python").'
+    ],
+    [
+      'Person_Skills',
+      'Track who has which skills',
+      'Main data entry sheet. Select person and skill from dropdowns, then rate proficiency 1-5.'
+    ],
+    [
+      'Summary',
+      'Auto-generated reports',
+      'Read-only views. Shows skills by person, people by skill, coverage stats, and experts.'
+    ]
+  ];
+  
+  const descRange = sheet.getRange(7, 1, sheetDescriptions.length, 3);
+  descRange.setValues(sheetDescriptions);
+  descRange.getCell(1, 1).setFontWeight('bold');
+  descRange.getCell(1, 2).setFontWeight('bold');
+  descRange.getCell(1, 3).setFontWeight('bold');
+  sheet.getRange('A7:C7').setBackground('#d9d2e9');
+  
+  // Quick start
+  sheet.getRange('A13').setValue('🚀 Quick Start Guide')
+    .setFontSize(16)
+    .setFontWeight('bold')
+    .setFontColor('#674ea7');
+  
+  const quickStart = [
+    ['Step', 'Action'],
+    ['1', 'Go to the People sheet and add/update team members'],
+    ['2', 'Go to the Skills sheet and add any missing skills'],
+    ['3', 'Go to Person_Skills and use the dropdowns to assign skills to people'],
+    ['4', 'Rate each skill from 1 (Beginner) to 5 (Expert)'],
+    ['5', 'Check the Summary sheet to see reports and statistics'],
+    ['', '']
+  ];
+  
+  const qsRange = sheet.getRange(14, 1, quickStart.length, 2);
+  qsRange.setValues(quickStart);
+  qsRange.getCell(1, 1).setFontWeight('bold');
+  qsRange.getCell(1, 2).setFontWeight('bold');
+  sheet.getRange('A14:B14').setBackground('#d9d2e9');
+  
+  // Skill levels
+  sheet.getRange('A22').setValue('📈 Skill Level Guide')
+    .setFontSize(16)
+    .setFontWeight('bold')
+    .setFontColor('#674ea7');
+  
+  const skillLevels = [
+    ['Level', 'Description', 'Example'],
+    ['1 - Beginner', 'Basic awareness, minimal experience', 'Can follow tutorials with guidance'],
+    ['2 - Basic', 'Some practical experience', 'Can complete simple tasks independently'],
+    ['3 - Intermediate', 'Regular use, good working knowledge', 'Can solve common problems and debug issues'],
+    ['4 - Advanced', 'Deep expertise, can teach others', 'Can architect solutions and mentor team'],
+    ['5 - Expert', 'Master level, recognized authority', 'Can handle edge cases and contribute to field']
+  ];
+  
+  const lvlRange = sheet.getRange(23, 1, skillLevels.length, 3);
+  lvlRange.setValues(skillLevels);
+  lvlRange.getCell(1, 1).setFontWeight('bold');
+  lvlRange.getCell(1, 2).setFontWeight('bold');
+  lvlRange.getCell(1, 3).setFontWeight('bold');
+  sheet.getRange('A23:C23').setBackground('#d9d2e9');
+  
+  // Add conditional formatting to show level colors
+  sheet.getRange('A24').setValue('1 - Beginner').setBackground('#e06666').setFontColor('#ffffff');
+  sheet.getRange('A25').setValue('2 - Basic').setBackground('#f6b26b').setFontColor('#000000');
+  sheet.getRange('A26').setValue('3 - Intermediate').setBackground('#ffd966').setFontColor('#000000');
+  sheet.getRange('A27').setValue('4 - Advanced').setBackground('#93c47d').setFontColor('#000000');
+  sheet.getRange('A28').setValue('5 - Expert').setBackground('#00ff00').setFontColor('#000000');
+  
+  // Tips
+  sheet.getRange('A30').setValue('💡 Tips')
+    .setFontSize(16)
+    .setFontWeight('bold')
+    .setFontColor('#674ea7');
+  
+  const tips = [
+    ['• Use the dropdown menus in Person_Skills to avoid typos and duplicates'],
+    ['• Update skill ratings regularly as team members develop new expertise'],
+    ['• Add notes in Person_Skills to provide context (certifications, projects, years of experience)'],
+    ['• The Summary sheet updates automatically - no manual editing needed'],
+    ['• Keep skill names consistent and specific (e.g., "Python" not "Python Programming")']
+  ];
+  
+  sheet.getRange(31, 1, tips.length, 1).setValues(tips);
+  
+  // Format
+  sheet.setColumnWidth(1, 150);
+  sheet.setColumnWidth(2, 250);
+  sheet.setColumnWidth(3, 400);
+  sheet.setRowHeight(1, 40);
+  
+  // Add borders to tables
+  sheet.getRange('A7:C11').setBorder(true, true, true, true, true, true);
+  sheet.getRange('A14:B20').setBorder(true, true, true, true, true, true);
+  sheet.getRange('A23:C28').setBorder(true, true, true, true, true, true);
 }
 
 function createPeopleSheet(ss) {
