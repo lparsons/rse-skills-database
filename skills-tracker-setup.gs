@@ -12,17 +12,21 @@
 function setupSkillsTracker() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   
-  // Clear any existing sheets except the first one
-  const sheets = ss.getSheets();
-  if (sheets.length > 0) {
-    ss.deleteSheet(sheets[0]);
-  }
-  
-  // Create all sheets
+  // Create all sheets first
   createPeopleSheet(ss);
   createSkillsSheet(ss);
   createPersonSkillsSheet(ss);
   createSummarySheet(ss);
+  
+  // Delete original default sheet(s) after creating new ones
+  const sheets = ss.getSheets();
+  for (let i = sheets.length - 1; i >= 0; i--) {
+    const sheetName = sheets[i].getName();
+    if (sheetName !== 'People' && sheetName !== 'Skills' && 
+        sheetName !== 'Person_Skills' && sheetName !== 'Summary') {
+      ss.deleteSheet(sheets[i]);
+    }
+  }
   
   SpreadsheetApp.getUi().alert('Skills Tracker setup complete!');
 }
